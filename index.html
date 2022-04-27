@@ -1,55 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         table {
             font-family: arial, sans-serif;
-            border-collapse: separate|collapse|initial|inherit;
+            border-collapse: collapse;
             width: 100%;
         }
-
         td, th {
-            border: 1px solid black;
+            border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
         }
-
         tr:nth-child(even) {
             background-color: #dddddd;
         }
     </style>
 </head>
-<body style="background-color: aqua">
-<h2>QUẢN LÝ TIN TỨC</h2>
-<form action="untitled1/index.html" method="get">
-    <p>Tiêu đề <input type="text" name="title" style="font-size: 20px"></p>
-    <p>Danh mục <input type="text" name="category" style="font-size: 20px"></p>
-    <input type="submit" value="Search" style="background-color: yellow">
-</form>
-<br>
-<table id="employees-table">
-    <tr >
-        <th>Id</th>
-        <th>Name</th>
-        <th>Wage</th>
-    </tr>
-</table>
+
+<body style="background-color: azure">
+<div class="w3-container">
+    <div class="w3-row w3-margin">
+        <h2>List</h2>
+        <a href="form.html"><button class="w3-button  w3-green">+</button></a>
+    </div>
+    <form action="index.html" method="get">
+        <p>Name : <input type="text" name="name">
+            <input type="submit" value="Search">
+        </p>
+    </form>
+    <div class="w3-row w3-margin">
+        <table id="article-table">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Wage</th>
+            </tr>
+        </table>
+    </div>
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const urlParmas = new URLSearchParams(window.location.search);
-        const title = urlParmas.get('title');
-        const category = urlParmas.get('category');
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
+        const name = urlParmas.get('name');
+        var xhr = new XMLHttpRequest(); // gui du lieu len or goi grad
+        // Xử lý kết quả trả về
+        xhr.onreadystatechange = function () { //onreadystatechange la trang thai
+            //Khi trạng thái  request đã kết thúc và status là thành công
             if (xhr.readyState == 4 && xhr.status == 200){
-                console.log(xhr.responseText);
-                var data = JSON.parse(xhr.responseText);
+                console.log(xhr.responseText);// dữ liệu định dạng  chuỗi có format kiểu json.
+                var data = JSON.parse(xhr.responseText);// Chuyển từ chuỗi sang object json
                 console.log(data[0].name);
-                var tableTag = document.querySelector('#employees-table');
+                var tableTag = document.querySelector('#article-table');
                 for (let i = 0; i < data.length; i ++){
                     const  element = data[i];
                     tableTag.innerHTML += `<tr>
@@ -65,23 +70,24 @@
                 }
             }
         }
-        xhr.open('GET',`http://localhost:8080/api/v1/employees?title=${title}&category=${category}`, false);
+        xhr.open('GET',`http://localhost:8080/api/v1/employees?name=${name}`, false);
         xhr.send(); // phóng xe đi
     });
 
-    function deleteProduct(id){
+    function deleteProduct(id) {
         if (id === undefined || id === null){
             return;
         }
-        if (confirm('Are you sure?')){
+        if (confirm('Are you sure ?')){
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function (){
-                if (xhr.readyState == 4 && xhr.status == 200){
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200){
                     alert('Success');
-                    window.location.href = '/index.html';
+                    window.location.href = 'index.html?name=';
                 }
             };
-            xhr.open('DELETE', 'http://localhost:8080/api/v1/employees/'+ id, false);
+            xhr.open('DELETE','http://localhost:8088/api/v1/employees/' + id, false);
             xhr.send();
         }
     }
